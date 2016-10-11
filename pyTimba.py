@@ -1,6 +1,8 @@
 import cv2
 import numpy as np
 import time
+from espeak import espeak as es
+
 
 #toma una imagen de la webcam 
 cam = cv2.VideoCapture(1)
@@ -19,6 +21,7 @@ copia = imagen.copy()
 
 #saca la media de la imagen para sacar el thereshold minimo para la funcion Canny
 teresjold = cv2.mean(copia)
+
 teresjoldMin = teresjold[1] - teresjold[1] * 0.1
 
 
@@ -31,7 +34,7 @@ teresjoldMin = teresjold[1] - teresjold[1] * 0.1
 blureado = cv2.blur(copia, (5,5))
 
 #saca los bordes de la imagen
-edges = cv2.Canny(blureado, teresjoldMin, 210)
+edges = cv2.Canny(blureado, teresjoldMin, 200)
 
 
 #pasa a dos bits la imagen de grises
@@ -69,6 +72,19 @@ if circulos is not None:
 if circulos is not None:
 	print(len(circulos))
 
+es.set_voice("es-la")
+es.synth("La suma de la cara de los dados es: ")
+es.synth(str(len(circulos)))
+while es.is_playing():
+	pass
+
+"""	
+engine = pyttsx.init()
+engine.say(len(circulos))
+engine.runAndWait()	
+"""
+
+	
 
 #escribe los archivos jpg
 cv2.imwrite('orignal.jpg', imagen)
